@@ -1,0 +1,8 @@
+# Core Libraries
+requests
+pandas
+psycopg2-binary
+python-dotenv
+
+# Data Processing Libraries
+numpy
