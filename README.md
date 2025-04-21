@@ -30,13 +30,13 @@ scopus_openalex_projects/
 ### Installation
 
 1. Clone the repository:
-   `git clone https://github.com/bennisyiu/ipao-portfolio-projects.git`
+   `git clone https://github.com/bennisyiu/ipao-portfolio-projects.git` /
    `cd ipao-portfolio-projects`
 
 2. Create a virtual environment:
-   `python3 -m venv venv`
-   `source venv/bin/activate` # Linux/Mac
-   `.\venv\Scripts\activate` # Windows
+   `python3 -m venv venv` /
+   `source venv/bin/activate` / # Linux/Mac /
+   `.\venv\Scripts\activate` / # Windows /
 
 3. Install dependencies:
    `pip install -r requirements.txt`
@@ -44,13 +44,13 @@ scopus_openalex_projects/
    `pip3 install -r requirements.txt`
 
 4. Set up environment variables:
-   `SCOPUS_API_KEY=your_scopus_api_key`
-   `DB_HOST=localhost`
-   `DB_PORT=5432`
-   `DB_USER=your_db_user`
-   `DB_PASSWORD=your_db_password`
-   `DB_NAME=your_db_name`
+   `SCOPUS_API_KEY=your_scopus_api_key` /
+   `DB_HOST=localhost` /
+   `DB_PORT=5432` /
+   `DB_USER=your_db_user` /
+   `DB_PASSWORD=your_db_password` /
+   `DB_NAME=your_db_name` /
 
 ### Execution
 
-1. in terminal: `python project1.py` # or 'python3' instead
+1. in terminal: `python project1.py` # or `python3 project1.py` # for Mac
