@@ -1,6 +1,6 @@
 # Portfolio Projects: SCOPUS & OpenAlex Data Pipeline
 
-A Python ETL pipeline that extracts research publication data from the SCOPUS API (and potentially OpenAlex), transforms it, and loads it into a PostgreSQL database for analysis and visualization.
+A Python ETL pipeline that extracts research publication data from the SCOPUS API, transforms it, and loads it into a PostgreSQL database for analysis and visualization.
 
 ## 📌 Features
 
@@ -12,8 +12,8 @@ A Python ETL pipeline that extracts research publication data from the SCOPUS AP
 
 ## Project Structure
 
-scopus_openalex_projects/
-├── project1.py  
+scopus_openalex_projects <br>
+├── scopus_project.py  
 ├── requirements.txt  
 ├── .env  
 ├── .gitignore  
@@ -29,28 +29,32 @@ scopus_openalex_projects/
 
 ### Installation
 
-1. Clone the repository:
-   `git clone https://github.com/bennisyiu/ipao-portfolio-projects.git` /
+1. Clone the repository: <br>
+   `git clone https://github.com/bennisyiu/ipao-portfolio-projects.git`
+   <br>
    `cd ipao-portfolio-projects`
 
-2. Create a virtual environment:
-   `python3 -m venv venv` /
-   `source venv/bin/activate` / # Linux/Mac /
-   `.\venv\Scripts\activate` / # Windows /
+2. Create a virtual environment: <br>
+   `python3 -m venv venv`
+   <br>
+   `source venv/bin/activate` # Linux or Mac <br>
 
-3. Install dependencies:
+   `.\venv\Scripts\activate` # Windows
+
+3. Install dependencies: <br>
    `pip install -r requirements.txt`
-   or
-   `pip3 install -r requirements.txt`
 
-4. Set up environment variables:
-   `SCOPUS_API_KEY=your_scopus_api_key` /
-   `DB_HOST=localhost` /
-   `DB_PORT=5432` /
-   `DB_USER=your_db_user` /
-   `DB_PASSWORD=your_db_password` /
-   `DB_NAME=your_db_name` /
+4. Set up environment variables: <br>
+
+   Replace the following details with your own credentials <br>
+
+   `SCOPUS_API_KEY=your_scopus_api_key` <br>
+   `DB_HOST=localhost` <br>
+   `DB_PORT=5432` <br>
+   `DB_USER=your_db_user` <br>
+   `DB_PASSWORD=your_db_password` <br>
+   `DB_NAME=your_db_name` <br>
 
 ### Execution
 
-1. in terminal: `python project1.py` # or `python3 project1.py` # for Mac
+1. in terminal: `python scopus_project.py`
