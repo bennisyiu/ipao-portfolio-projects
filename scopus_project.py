@@ -6,6 +6,7 @@ import psycopg2
 import os
 import time
 import re
+import json
 from datetime import timedelta, datetime
 from pandas import json_normalize
 from dotenv import load_dotenv
@@ -107,19 +108,15 @@ def scopus_search(scopus_credentials, query, start=0, count=25, sort='citedby-co
         'Accept': 'application/json'
     }
 
-    # Include all available fields
+    # list of fields
     fields = [
-        'dc:identifier', 'dc:title', 'dc:creator', 'prism:publicationName',
-        'prism:isbn', 'prism:issn', 'prism:eIssn', 'prism:volume', 'prism:issueIdentifier',
-        'prism:pageRange', 'prism:coverDate', 'prism:coverDisplayDate', 'prism:doi',
-        'dc:description', 'citedby-count', 'prism:aggregationType', 'subtype',
-        'subtypeDescription', 'source-id', 'openaccess', 'openaccessFlag',
-        'freetoread', 'freetoreadLabel', 'eIssn', 'author', 'dc:contributor',
-        'authkeywords', 'article-number', 'fund-acr', 'fund-no', 'fund-sponsor',
-        'pubmed-id', 'orcid', 'eid', 'pii', 'prism:url', 'dc:publisher', 'affiliation',
-        'prism:aggregationType', 'subtype', 'subtypeDescription', 'source-id', 'srctype',
-        'citedby-count', 'prism:volume', 'prism:issueIdentifier', 'prism:pageRange',
-        'subj'
+        'dc:identifier',  # Unique identifier
+        'prism:doi',      # DOI for Abstract Retrieval API
+        'prism:coverDate',  # Publication date
+        'citedby-count',  # Citation count
+        'prism:publicationName',  # Journal or conference name
+        # Type of publication (e.g., Article, Conference Paper)
+        'subtypeDescription',
     ]
 
     params = {
@@ -178,7 +175,7 @@ def scopus_search(scopus_credentials, query, start=0, count=25, sort='citedby-co
 
 def process_scopus_search_results(all_data):
     """Process Scopus search results data
-    Return a dataframe with all available columns and database-friendly names
+    Return a dataframe with selected columns and database-friendly names
     """
     if not all_data:
         print("No data received from Scopus API")
@@ -201,36 +198,42 @@ def process_scopus_search_results(all_data):
     # Clean column names
     df.columns = [clean_column_name(col) for col in df.columns]
 
+    # Ensure all fields from scopus_search() are present
+    expected_fields = [
+        'dc_identifier',
+        'prism_doi',
+        'prism_coverdate',
+        'citedby_count',
+        'prism_publicationname',
+        'subtypedescription'
+    ]
+
+    for field in expected_fields:
+        if field not in df.columns:
+            df[field] = None
+            print(
+                f"Warning: '{field}' not found in API response. Added as empty column.")
+
     # Convert numeric fields
-    numeric_fields = ['citedby_count', 'openaccess', 'openaccessflag']
-    for field in numeric_fields:
-        if field in df.columns:
-            df[field] = pd.to_numeric(df[field], errors='coerce')
+    if 'citedby_count' in df.columns:
+        df['citedby_count'] = pd.to_numeric(
+            df['citedby_count'], errors='coerce')
 
     # Convert date fields
-    date_fields = ['prism_coverdate', 'prism_coverdisplaydate']
-    for field in date_fields:
-        if field in df.columns:
-            df[field] = pd.to_datetime(df[field], errors='coerce')
-
-    # Process list fields
-    list_fields = ['author', 'affiliation', 'authkeywords',
-                   'fund_sponsor', 'fund_acr', 'fund_no']
-    for field in list_fields:
-        if field in df.columns:
-            df[field] = df[field].apply(
-                lambda x: ', '.join(process_list_item(x)) if isinstance(x, list) else str(x) if x is not None else '')
+    if 'prism_coverdate' in df.columns:
+        df['prism_coverdate'] = pd.to_datetime(
+            df['prism_coverdate'], errors='coerce')
 
     # Add a column for publication year
     if 'prism_coverdate' in df.columns:
         df['publication_year'] = df['prism_coverdate'].dt.year
     else:
-        print("Warning: 'prism_coverdate' not found in the data. Using current year as fallback.")
-        df['publication_year'] = datetime.now().year
+        print(
+            "Warning: 'prism_coverdate' not found in the data. Using 2100 as fallback year.")
+        df['publication_year'] = 2100
 
     # Ensure publication_year is always an integer
-    df['publication_year'] = df['publication_year'].fillna(
-        datetime.now().year).astype(int)
+    df['publication_year'] = df['publication_year'].fillna(2100).astype(int)
 
     # Print column names and their types for debugging
     print("Column names and types:")
@@ -241,6 +244,91 @@ def process_scopus_search_results(all_data):
     print(df.head())
 
     return df
+
+# def process_scopus_search_results(all_data):
+#     """Process Scopus search results data
+#     Return a dataframe with all available columns and database-friendly names
+#     """
+#     if not all_data:
+#         print("No data received from Scopus API")
+#         return pd.DataFrame()
+
+#     # Convert to DataFrame
+#     df = pd.json_normalize(all_data)
+
+#     # Function to clean column names
+#     def clean_column_name(name):
+#         # Replace non-alphanumeric characters with underscores
+#         name = re.sub(r'[^a-zA-Z0-9]', '_', name)
+#         # Replace multiple underscores with a single underscore
+#         name = re.sub(r'_+', '_', name)
+#         # Remove leading or trailing underscores
+#         name = name.strip('_')
+#         # Convert to lowercase
+#         return name.lower()
+
+#     # Clean column names
+#     df.columns = [clean_column_name(col) for col in df.columns]
+
+#     # Ensure all fields from scopus_search() are present
+#     expected_fields = [
+#         'dc_identifier', 'dc_title', 'dc_creator', 'prism_publicationname',
+#         'prism_isbn', 'prism_issn', 'prism_eissn', 'prism_volume', 'prism_issueidentifier',
+#         'prism_pagerange', 'prism_coverdate', 'prism_coverdisplaydate', 'prism_doi',
+#         'dc_description', 'citedby_count', 'prism_aggregationtype', 'subtype',
+#         'subtypedescription', 'source_id', 'openaccess', 'openaccessflag',
+#         'freetoread', 'freetoreadlabel', 'eissn', 'author', 'dc_contributor',
+#         'authkeywords', 'article_number', 'fund_acr', 'fund_no', 'fund_sponsor',
+#         'pubmed_id', 'orcid', 'eid', 'pii', 'prism_url', 'dc_publisher', 'affiliation',
+#         'srctype', 'subj'
+#     ]
+
+#     for field in expected_fields:
+#         if field not in df.columns:
+#             df[field] = None
+#             print(
+#                 f"Warning: '{field}' not found in API response. Added as empty column.")
+
+#     # Convert numeric fields
+#     numeric_fields = ['citedby_count', 'openaccess', 'openaccessflag']
+#     for field in numeric_fields:
+#         if field in df.columns:
+#             df[field] = pd.to_numeric(df[field], errors='coerce')
+
+#     # Convert date fields
+#     date_fields = ['prism_coverdate', 'prism_coverdisplaydate']
+#     for field in date_fields:
+#         if field in df.columns:
+#             df[field] = pd.to_datetime(df[field], errors='coerce')
+
+#     # Process list fields
+#     list_fields = ['author', 'affiliation', 'authkeywords',
+#                    'fund_sponsor', 'fund_acr', 'fund_no', 'subj']
+#     for field in list_fields:
+#         if field in df.columns:
+#             df[field] = df[field].apply(
+#                 lambda x: ', '.join(process_list_item(x)) if isinstance(x, list) else str(x) if x is not None else '')
+
+#     # Add a column for publication year
+#     if 'prism_coverdate' in df.columns:
+#         df['publication_year'] = df['prism_coverdate'].dt.year
+#     else:
+#         print("Warning: 'prism_coverdate' not found in the data. Using current year as fallback.")
+#         df['publication_year'] = datetime.now().year
+
+#     # Ensure publication_year is always an integer
+#     df['publication_year'] = df['publication_year'].fillna(
+#         datetime.now().year).astype(int)
+
+#     # Print column names and their types for debugging
+#     print("Column names and types:")
+#     print(df.dtypes)
+
+#     # Print the first few rows for debugging
+#     print("First few rows of the processed dataframe:")
+#     print(df.head())
+
+#     return df
 
 
 def process_list_item(item):
@@ -352,7 +440,206 @@ def scopus_search_data_uploader(db_credentials, df, table_name='scopus_search_ou
         conn.close()
 
 
-def main():
+def abstract_retrieval(scopus_credentials, doi):
+    print(f'abstract_retrieval() method for DOI: {doi}')
+
+    scopus_api_key = scopus_credentials['access_token']
+    url = f'https://api.elsevier.com/content/abstract/doi/{doi}'
+
+    headers = {
+        'X-ELS-APIKey': scopus_api_key,
+        'Accept': 'application/json'
+    }
+
+    response = requests.get(url, headers=headers)
+    print(f"Response status code: {response.status_code}")
+    response.raise_for_status()
+
+    json_response = response.json()
+    # Print first 500 characters
+    print(
+        f"Response structure: {json.dumps(json_response, indent=2)[:500]}...")
+
+    return json_response
+
+
+def process_abstract_retrieval_results(abstract_data):
+    """Process Abstract Retrieval API results"""
+    if not abstract_data:
+        print("No data received from Abstract Retrieval API")
+        return {}
+
+    # Handle case where abstract_data is a list
+    if isinstance(abstract_data, list):
+        abstract_data = abstract_data[0] if abstract_data else {}
+
+    coredata = abstract_data.get(
+        'abstracts-retrieval-response', {}).get('coredata', {})
+
+    processed_data = {
+        'dc:identifier': coredata.get('dc:identifier'),
+        'dc:title': coredata.get('dc:title'),
+        'prism:doi': coredata.get('prism:doi'),
+        'prism:coverDate': coredata.get('prism:coverDate'),
+        'citedby-count': coredata.get('citedby-count'),
+        'prism:publicationName': coredata.get('prism:publicationName'),
+        'subtypeDescription': coredata.get('subtypeDescription'),
+        'prism:volume': coredata.get('prism:volume'),
+        'prism:issueIdentifier': coredata.get('prism:issueIdentifier'),
+        'prism:pageRange': coredata.get('prism:pageRange'),
+        'openaccess': coredata.get('openaccess'),
+        'pubmed-id': coredata.get('pubmed-id'),
+    }
+
+    # Process affiliation data
+    affiliations = abstract_data.get(
+        'abstracts-retrieval-response', {}).get('affiliation', [])
+    if not isinstance(affiliations, list):
+        affiliations = [affiliations] if affiliations else []
+    processed_data['affiliations'] = [
+        {
+            'name': aff.get('affilname'),
+            'city': aff.get('affiliation-city'),
+            'country': aff.get('affiliation-country')
+        }
+        for aff in affiliations
+    ]
+
+    # Process author data
+    authors = coredata.get('dc:creator', {})
+    if isinstance(authors, dict):
+        authors = authors.get('author', [])
+    if not isinstance(authors, list):
+        authors = [authors] if authors else []
+    processed_data['authors'] = [
+        {
+            'name': author.get('ce:indexed-name'),
+            'affiliation': author.get('affiliation', {}).get('@id') if isinstance(author.get('affiliation'), dict) else author.get('affiliation')
+        }
+        for author in authors
+    ]
+
+    return processed_data
+
+# def process_abstract_retrieval_results(abstract_data):
+#     """Process Abstract Retrieval API results"""
+#     if not abstract_data:
+#         print("No data received from Abstract Retrieval API")
+#         return {}
+
+#     coredata = abstract_data.get(
+#         'abstracts-retrieval-response', {}).get('coredata', {})
+
+#     processed_data = {
+#         'dc:identifier': coredata.get('dc:identifier'),
+#         'dc:title': coredata.get('dc:title'),
+#         'prism:doi': coredata.get('prism:doi'),
+#         'prism:coverDate': coredata.get('prism:coverDate'),
+#         'citedby-count': coredata.get('citedby-count'),
+#         'prism:publicationName': coredata.get('prism:publicationName'),
+#         'subtypeDescription': coredata.get('subtypeDescription'),
+#         'prism:volume': coredata.get('prism:volume'),
+#         'prism:issueIdentifier': coredata.get('prism:issueIdentifier'),
+#         'prism:pageRange': coredata.get('prism:pageRange'),
+#         'openaccess': coredata.get('openaccess'),
+#         'pubmed-id': coredata.get('pubmed-id'),
+#     }
+
+#     # Process affiliation data
+#     affiliations = abstract_data.get(
+#         'abstracts-retrieval-response', {}).get('affiliation', [])
+#     processed_data['affiliations'] = [
+#         {
+#             'name': aff.get('affilname'),
+#             'city': aff.get('affiliation-city'),
+#             'country': aff.get('affiliation-country')
+#         }
+#         for aff in affiliations
+#     ]
+
+#     # Process author data
+#     authors = coredata.get('dc:creator', {}).get('author', [])
+#     processed_data['authors'] = [
+#         {
+#             'name': author.get('ce:indexed-name'),
+#             'affiliation': author.get('affiliation', {}).get('@id')
+#         }
+#         for author in authors
+#     ]
+
+#     return processed_data
+
+
+def abstract_retrieval_data_uploader(db_credentials, df, table_name='abstract_retrieval_output'):
+    """
+    Upload Abstract Retrieval data to Postgres database.
+    """
+    try:
+        # Connect to the Postgres database
+        conn = psycopg2.connect(
+            host=db_credentials['hostname'],
+            database=db_credentials['database'],
+            user=db_credentials['username'],
+            password=db_credentials['password'],
+            port=db_credentials['port']
+        )
+        cursor = conn.cursor()
+
+        # Set the schema
+        schema_query = f"SET search_path TO {db_credentials['schema']};"
+        cursor.execute(schema_query)
+
+        # Prepare the data for insertion
+        columns = df.columns.tolist()
+
+        # Insert data in chunks
+        chunk_size = 50
+        chunks = [df[i:i + chunk_size] for i in range(0, len(df), chunk_size)]
+
+        for chunk in chunks:
+            values_list = []
+            for _, row in chunk.iterrows():
+                values = []
+                for col in columns:
+                    value = row.get(col)
+                    if pd.isnull(value):
+                        values.append("NULL")
+                    elif isinstance(value, str):
+                        value = value.replace("'", "''")
+                        values.append(f"'{value}'::text")
+                    elif isinstance(value, (datetime, pd.Timestamp)):
+                        values.append(f"'{value}'::timestamp")
+                    elif isinstance(value, bool):
+                        values.append(str(value).lower())
+                    elif isinstance(value, (int, float)):
+                        values.append(str(value))
+                    else:
+                        values.append(f"'{value}'::text")
+                values_list.append(f"({','.join(values)})")
+
+            column_names = ', '.join([f'"{col}"' for col in columns])
+            insert_query = f"""
+                INSERT INTO {table_name} ({column_names}) 
+                VALUES {','.join(values_list)}
+                ON CONFLICT (dc_identifier) DO UPDATE
+                SET {', '.join([f'"{col}" = EXCLUDED."{col}"' for col in columns if col != 'dc_identifier'])}
+            """
+            cursor.execute(insert_query)
+            conn.commit()
+            print(f"Uploaded chunk of {len(chunk)} records")
+
+        print(f"Successfully uploaded data to {table_name}")
+
+    except Exception as e:
+        print(f"Error uploading data to table {table_name}: {e}")
+        conn.rollback()
+        raise e
+    finally:
+        cursor.close()
+        conn.close()
+
+
+def scopus_research_procedures():
     try:
         scopus_credentials, db_credentials = get_credentials()
 
@@ -458,6 +745,157 @@ def main():
         print(f"An unexpected error occurred: {e}")
         import traceback
         traceback.print_exc()
+
+
+def abstract_retrieval_procedures():
+    try:
+        scopus_credentials, db_credentials = get_credentials()
+
+        # Test DOIs
+        test_dois = [
+            "10.1016/j.rcim.2023.102626",
+            "10.1038/s41467-024-46022-3",
+            "10.1038/s41586-024-07161-1",
+            "10.1016/j.xinn.2024.100612",
+            "10.1016/j.apcatb.2023.123312",
+            "10.1016/j.apcatb.2023.123335",
+            "10.1002/adma.202311970",
+            "10.1109/JIOT.2024.3361173",
+            "10.1016/j.engstruct.2023.117193",
+            "10.1002/adma.202310918",
+            "10.1002/adma.202307404",
+            "10.1007/s00170-022-10767-2",
+            "10.1038/s41560-023-01415-4",
+            "10.1021/acsnano.3c10674",
+            "10.1002/adma.202300034",
+            "10.1021/jacs.3c10516",
+            "10.1109/TEVC.2022.3215743",
+            "10.1002/adma.202313548",
+            "10.1016/j.joule.2023.12.009",
+            "10.1016/j.knosys.2023.111158"
+        ]
+
+        print(f"Testing abstract retrieval for {len(test_dois)} DOIs")
+
+        abstract_results = []
+        for doi in test_dois:
+            try:
+                print(f"\nProcessing DOI: {doi}")
+                abstract_data = abstract_retrieval(scopus_credentials, doi)
+                processed_abstract = process_abstract_retrieval_results(
+                    abstract_data)
+                abstract_results.append(processed_abstract)
+                print(
+                    f"Successfully retrieved and processed abstract for DOI: {doi}")
+
+                # Print some details of the processed abstract
+                print("Abstract details:")
+                print(f"Title: {processed_abstract.get('dc:title', 'N/A')}")
+                print(
+                    f"Publication Name: {processed_abstract.get('prism:publicationName', 'N/A')}")
+                print(
+                    f"Cover Date: {processed_abstract.get('prism:coverDate', 'N/A')}")
+                print(
+                    f"Cited by Count: {processed_abstract.get('citedby-count', 'N/A')}")
+                print("---")
+            except Exception as e:
+                print(f"Error processing abstract for DOI {doi}: {e}")
+
+        if not abstract_results:
+            print("No abstract results to process.")
+            return
+
+        # Convert abstract results to DataFrame
+        abstract_df = pd.DataFrame(abstract_results)
+
+        # Print the first few rows of the abstract DataFrame
+        print("\nFirst few rows of the abstract DataFrame:")
+        print(abstract_df.head())
+
+        # Print DataFrame info
+        print("\nAbstract DataFrame info:")
+        abstract_df.info()
+
+        # Save abstract results to CSV
+        abstract_csv_file = 'scopus_abstract_output_test.csv'
+        abstract_df.to_csv(abstract_csv_file, index=False)
+        print(f"\nAbstract results saved to '{abstract_csv_file}'")
+
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        import traceback
+        traceback.print_exc()
+
+# def abstract_retrieval_procedures():
+#     try:
+#         scopus_credentials, db_credentials = get_credentials()
+
+#         # Load the CSV file with DOIs
+#         csv_file = 'polyu_research_output.csv'
+#         try:
+#             df = pd.read_csv(csv_file)
+#             print(f"Loaded {len(df)} records from {csv_file}")
+#         except FileNotFoundError:
+#             print(
+#                 f"No file found at {csv_file}. Please run scopus_research_procedures first.")
+#             return
+#         except Exception as e:
+#             print(f"Error reading CSV file: {e}")
+#             return
+
+#         # Get unique DOIs
+#         dois = df['prism_doi'].dropna().unique()
+#         print(f"Found {len(dois)} unique DOIs to process")
+
+#         abstract_results = []
+#         for doi in dois:
+#             try:
+#                 abstract_data = abstract_retrieval(scopus_credentials, doi)
+#                 processed_abstract = process_abstract_retrieval_results(
+#                     abstract_data)
+#                 abstract_results.append(processed_abstract)
+#                 print(
+#                     f"Successfully retrieved and processed abstract for DOI: {doi}")
+#             except Exception as e:
+#                 print(f"Error processing abstract for DOI {doi}: {e}")
+
+#         if not abstract_results:
+#             print("No abstract results to process.")
+#             return
+
+#         # Convert abstract results to DataFrame
+#         abstract_df = pd.DataFrame(abstract_results)
+
+#         # Print the first few rows of the abstract DataFrame
+#         print("\nFirst few rows of the abstract DataFrame:")
+#         print(abstract_df.head())
+
+#         # Print DataFrame info
+#         print("\nAbstract DataFrame info:")
+#         abstract_df.info()
+
+#         # Save abstract results to CSV
+#         abstract_csv_file = 'scopus_abstract_output.csv'
+#         abstract_df.to_csv(abstract_csv_file, index=False)
+#         print(f"\nAbstract results saved to '{abstract_csv_file}'")
+
+#         # Upload abstract results to database
+#         try:
+#             abstract_retrieval_data_uploader(
+#                 db_credentials, abstract_df, table_name='scopus_abstract_output')
+#             print("Abstract Retrieval Data has been uploaded to DB.")
+#         except Exception as e:
+#             print(f"Error uploading abstract data to database: {e}")
+
+#     except Exception as e:
+#         print(f"An unexpected error occurred: {e}")
+#         import traceback
+#         traceback.print_exc()
+
+
+def main():
+    # scopus_research_procedures()
+    abstract_retrieval_procedures()
 
 
 if __name__ == "__main__":
