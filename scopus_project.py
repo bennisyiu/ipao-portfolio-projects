@@ -639,112 +639,103 @@ def abstract_retrieval_data_uploader(db_credentials, df, table_name='abstract_re
         conn.close()
 
 
-def scopus_research_procedures():
+def scopus_research_procedures(years_to_process):
     try:
-        scopus_credentials, db_credentials = get_credentials()
+        scopus_credentials, db_credentials = get_credentials(
+        )  # pylint: disable=unused-variable
 
-        # Project 1: PolyU's research output
-        query = "AFFIL(\"The Hong Kong Polytechnic University\") AND PUBYEAR = 2024"
-        print(f"Executing Scopus search with query: {query}")
+        max_results_per_api_call = 5000
 
         csv_file = 'polyu_research_output.csv'
         existing_df = pd.DataFrame()
         try:
             existing_df = pd.read_csv(csv_file)
+            if 'publication_year' not in existing_df.columns:
+                print("Adding missing publication_year column to existing data")
+                existing_df['publication_year'] = pd.to_datetime(
+                    existing_df['prism_coverdate']).dt.year
             print(
                 f"Loaded {len(existing_df)} existing records from {csv_file}")
         except FileNotFoundError:
             print(f"No existing file found at {csv_file}. Starting fresh.")
         except Exception as e:
             print(f"Error reading CSV file: {e}")
-            return
 
-        max_results = 5000
-        start = len(existing_df)  # Start from where we left off
-        all_results = []
+        all_new_results = []
+        latest_df = existing_df.copy()  # Initialize latest_df with existing data
 
-        while True:
-            remaining_results = max_results - start
-            if remaining_results <= 0:
-                print("All available results have been retrieved in previous runs.")
-                break
+        for year in years_to_process:
+            query = f"AFFIL(\"The Hong Kong Polytechnic University\") AND PUBYEAR = {year}"
+            print(f"\nExecuting Scopus search with query: {query}")
 
-            polyu_results = scopus_search(
-                scopus_credentials, query, start=start, max_results=remaining_results)
+            year_results = []
+            start = 0
+            while True:
+                try:
+                    polyu_results = scopus_search(
+                        scopus_credentials, query, start=start, max_results=max_results_per_api_call)
 
-            if not polyu_results:
-                print("No new results found.")
-                break
+                    if not polyu_results:
+                        print(f"No more results found for {year}.")
+                        break
 
-            new_results = exclude_existing_results(polyu_results, existing_df)
-            if not new_results:
-                print("All results already exist in the CSV. Stopping search.")
-                break
+                    year_results.extend(polyu_results)
+                    start += len(polyu_results)
 
-            all_results.extend(new_results)
-            start += len(polyu_results)
+                    print(
+                        f"Retrieved {len(polyu_results)} results for {year}. Total for {year}: {len(year_results)}")
 
+                    if len(polyu_results) < max_results_per_api_call:
+                        print(
+                            f"Reached the end of available results for {year}.")
+                        break
+
+                except Exception as e:
+                    print(f"Error during API call: {e}")
+                    print("Saving current results and moving to next year.")
+                    break
+
+            # Process and save results for this year
+            if year_results:
+                try:
+                    new_df = process_scopus_search_results(year_results)
+                    if 'publication_year' not in new_df.columns:
+                        # Ensure publication_year is added
+                        new_df['publication_year'] = year
+
+                    # Combine with existing data
+                    latest_df = pd.concat(
+                        [latest_df, new_df], ignore_index=True)
+                    latest_df.drop_duplicates(
+                        subset='dc_identifier', keep='last', inplace=True)
+
+                    # Try to save the results to a CSV file
+                    try:
+                        latest_df.to_csv(csv_file, index=False)
+                        print(
+                            f"\nResults saved to '{csv_file}'. Total records: {len(latest_df)}")
+                    except Exception as e:
+                        print(f"Error saving CSV file: {e}")
+                        print("Continuing with in-memory DataFrame.")
+
+                except Exception as e:
+                    print(f"Error processing results for {year}: {e}")
+
+            all_new_results.extend(year_results)
+
+        if not all_new_results:
+            print("No new results to process across all years.")
+        else:
             print(
-                f"Retrieved {len(new_results)} new results. Total new results: {len(all_results)}")
+                f"Total new results across all years: {len(all_new_results)}")
 
-            if len(polyu_results) < remaining_results:
-                print("Reached the end of available results.")
-                break
-
-        if not all_results:
-            print("No new results to process.")
-            return
-
-        # Process the results
-        try:
-            new_df = process_scopus_search_results(all_results)
-        except Exception as e:
-            print(f"Error processing search results: {e}")
-            import traceback
-            traceback.print_exc()
-            return
-
-        if new_df.empty:
-            print("Processed dataframe is empty. No data to save.")
-            return
-
-        # Debugging: Print the first few rows of new_df
-        print("First few rows of new_df:")
-        print(new_df.head())
-
-        # Combine with existing data
-        combined_df = pd.concat([existing_df, new_df], ignore_index=True)
-        combined_df.drop_duplicates(
-            subset='dc_identifier', keep='last', inplace=True)
-
-        # Save the results to a CSV file
-        try:
-            combined_df.to_csv(csv_file, index=False)
-            print(
-                f"\nResults appended to '{csv_file}'. Total records: {len(combined_df)}")
-        except Exception as e:
-            print(f"Error saving results to CSV: {e}")
-            return
-
-        # Display information about the data
-        print(f"Number of new results: {len(new_df)}")
-        print("\nDataframe columns:")
-        print(new_df.columns)
-        print("\nDataframe info:")
-        new_df.info()
-
-        # Uncomment the following lines if you want to upload to the database
-        # try:
-        #     scopus_search_data_uploader(
-        #         db_credentials, new_df, table_name='scopus_search_output')
-        #     print("SCOPUS Data has been uploaded to DB.")
-        # except Exception as e:
-        #     print(f"Error uploading data to database: {e}")
+        return latest_df  # Return the latest DataFrame
 
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
         import traceback
         traceback.print_exc()
+        return pd.DataFrame()  # Return an empty DataFrame in case of overall failure
 
 
 def abstract_retrieval_procedures():
@@ -894,8 +885,8 @@ def abstract_retrieval_procedures():
 
 
 def main():
-    # scopus_research_procedures()
-    abstract_retrieval_procedures()
+    scopus_research_procedures([2022])
+    # abstract_retrieval_procedures()
 
 
 if __name__ == "__main__":
