@@ -12,6 +12,8 @@ from datetime import timedelta, datetime
 from pandas import json_normalize
 from dotenv import load_dotenv
 from requests.exceptions import Timeout, RequestException
+from psycopg2 import sql
+from psycopg2.extras import execute_values
 
 
 def get_credentials():
@@ -246,91 +248,6 @@ def process_scopus_search_results(all_data):
 
     return df
 
-# def process_scopus_search_results(all_data):
-#     """Process Scopus search results data
-#     Return a dataframe with all available columns and database-friendly names
-#     """
-#     if not all_data:
-#         print("No data received from Scopus API")
-#         return pd.DataFrame()
-
-#     # Convert to DataFrame
-#     df = pd.json_normalize(all_data)
-
-#     # Function to clean column names
-#     def clean_column_name(name):
-#         # Replace non-alphanumeric characters with underscores
-#         name = re.sub(r'[^a-zA-Z0-9]', '_', name)
-#         # Replace multiple underscores with a single underscore
-#         name = re.sub(r'_+', '_', name)
-#         # Remove leading or trailing underscores
-#         name = name.strip('_')
-#         # Convert to lowercase
-#         return name.lower()
-
-#     # Clean column names
-#     df.columns = [clean_column_name(col) for col in df.columns]
-
-#     # Ensure all fields from scopus_search() are present
-#     expected_fields = [
-#         'dc_identifier', 'dc_title', 'dc_creator', 'prism_publicationname',
-#         'prism_isbn', 'prism_issn', 'prism_eissn', 'prism_volume', 'prism_issueidentifier',
-#         'prism_pagerange', 'prism_coverdate', 'prism_coverdisplaydate', 'prism_doi',
-#         'dc_description', 'citedby_count', 'prism_aggregationtype', 'subtype',
-#         'subtypedescription', 'source_id', 'openaccess', 'openaccessflag',
-#         'freetoread', 'freetoreadlabel', 'eissn', 'author', 'dc_contributor',
-#         'authkeywords', 'article_number', 'fund_acr', 'fund_no', 'fund_sponsor',
-#         'pubmed_id', 'orcid', 'eid', 'pii', 'prism_url', 'dc_publisher', 'affiliation',
-#         'srctype', 'subj'
-#     ]
-
-#     for field in expected_fields:
-#         if field not in df.columns:
-#             df[field] = None
-#             print(
-#                 f"Warning: '{field}' not found in API response. Added as empty column.")
-
-#     # Convert numeric fields
-#     numeric_fields = ['citedby_count', 'openaccess', 'openaccessflag']
-#     for field in numeric_fields:
-#         if field in df.columns:
-#             df[field] = pd.to_numeric(df[field], errors='coerce')
-
-#     # Convert date fields
-#     date_fields = ['prism_coverdate', 'prism_coverdisplaydate']
-#     for field in date_fields:
-#         if field in df.columns:
-#             df[field] = pd.to_datetime(df[field], errors='coerce')
-
-#     # Process list fields
-#     list_fields = ['author', 'affiliation', 'authkeywords',
-#                    'fund_sponsor', 'fund_acr', 'fund_no', 'subj']
-#     for field in list_fields:
-#         if field in df.columns:
-#             df[field] = df[field].apply(
-#                 lambda x: ', '.join(process_list_item(x)) if isinstance(x, list) else str(x) if x is not None else '')
-
-#     # Add a column for publication year
-#     if 'prism_coverdate' in df.columns:
-#         df['publication_year'] = df['prism_coverdate'].dt.year
-#     else:
-#         print("Warning: 'prism_coverdate' not found in the data. Using current year as fallback.")
-#         df['publication_year'] = datetime.now().year
-
-#     # Ensure publication_year is always an integer
-#     df['publication_year'] = df['publication_year'].fillna(
-#         datetime.now().year).astype(int)
-
-#     # Print column names and their types for debugging
-#     print("Column names and types:")
-#     print(df.dtypes)
-
-#     # Print the first few rows for debugging
-#     print("First few rows of the processed dataframe:")
-#     print(df.head())
-
-#     return df
-
 
 def process_list_item(item):
     if isinstance(item, dict):
@@ -354,22 +271,17 @@ def exclude_existing_results(new_results, existing_df):
 def scopus_search_data_uploader(db_credentials, df, table_name='scopus_search_output'):
     """
     Upload Scopus data to Postgres database.
-    Replaces existing data for the same publication year before inserting new data.
+    Creates the table if it doesn't exist, then upserts data based on dc_identifier.
     """
     try:
-        # Convert date columns to datetime
-        date_columns = ['prism_coverdate']  # Updated column name
+        # Data preprocessing
+        date_columns = ['prism_coverdate']
         for col in date_columns:
             if col in df.columns:
                 df[col] = pd.to_datetime(df[col], errors='coerce')
 
-        # Ensure publication_year is always an integer and replace NaN with a default value
         df['publication_year'] = df['publication_year'].fillna(
             9999).astype(int)
-
-        # Extract publication year range from df
-        min_year = df['publication_year'].min()
-        max_year = df['publication_year'].max()
 
         # Connect to the Postgres database
         conn = psycopg2.connect(
@@ -382,63 +294,64 @@ def scopus_search_data_uploader(db_credentials, df, table_name='scopus_search_ou
         cursor = conn.cursor()
 
         # Set the schema
-        schema_query = f"SET search_path TO {db_credentials['schema']};"
-        cursor.execute(schema_query)
+        cursor.execute(sql.SQL("SET search_path TO {};").format(
+            sql.Identifier(db_credentials['schema'])
+        ))
 
-        # Delete existing data for the publication year range
-        delete_query = f"""
-            DELETE FROM {table_name}
-            WHERE publication_year >= %s AND publication_year <= %s;
-        """
-        cursor.execute(delete_query, (min_year, max_year))
+        # Check if table exists, if not create it
+        cursor.execute(sql.SQL("""
+            CREATE TABLE IF NOT EXISTS {} (
+                fa BOOLEAN,
+                prism_url TEXT,
+                dc_identifier TEXT PRIMARY KEY,
+                prism_publicationname TEXT,
+                prism_coverdate DATE,
+                prism_doi TEXT,
+                citedby_count INTEGER,
+                subtype TEXT,
+                subtypedescription TEXT,
+                publication_year INTEGER
+            )
+        """).format(sql.Identifier(table_name)))
 
         # Prepare the data for insertion
         columns = df.columns.tolist()
 
-        # Insert data in chunks
+        # Construct the INSERT ... ON CONFLICT DO UPDATE query
+        insert_query = sql.SQL("""
+            INSERT INTO {} ({})
+            VALUES %s
+            ON CONFLICT (dc_identifier) DO UPDATE SET
+            {}
+        """).format(
+            sql.Identifier(table_name),
+            sql.SQL(', ').join(map(sql.Identifier, columns)),
+            sql.SQL(', ').join(
+                sql.SQL("{0} = EXCLUDED.{0}").format(sql.Identifier(col))
+                for col in columns if col != 'dc_identifier'
+            )
+        )
+
+        # Insert or update data in chunks
         chunk_size = 50
-        chunks = [df[i:i + chunk_size] for i in range(0, len(df), chunk_size)]
+        for i in range(0, len(df), chunk_size):
+            chunk = df.iloc[i:i+chunk_size]
+            values = [tuple(row) for _, row in chunk.iterrows()]
+            execute_values(cursor, insert_query, values)
+            print(f"Processed chunk of {len(chunk)} records")
 
-        for chunk in chunks:
-            values_list = []
-            for _, row in chunk.iterrows():
-                values = []
-                for col in columns:
-                    value = row.get(col)
-                    if pd.isnull(value):
-                        values.append("NULL")
-                    elif isinstance(value, str):
-                        value = value.replace("'", "''")
-                        values.append(f"'{value}'::text")
-                    elif isinstance(value, (datetime, pd.Timestamp)):
-                        values.append(f"'{value}'::timestamp")
-                    elif isinstance(value, bool):
-                        values.append(str(value).lower())
-                    elif isinstance(value, (int, float)):
-                        values.append(str(value))
-                    else:
-                        values.append(f"'{value}'::text")
-                values_list.append(f"({','.join(values)})")
-
-            column_names = ', '.join([f'"{col}"' for col in columns])
-            insert_query = f"""
-                INSERT INTO {table_name} ({column_names}) 
-                VALUES {','.join(values_list)}
-            """
-            cursor.execute(insert_query)
-            conn.commit()
-            print(f"Uploaded chunk of {len(chunk)} records")
-
-        print(
-            f"Successfully uploaded data for publication years: {min_year} to {max_year}")
+        conn.commit()
+        print(f"Successfully uploaded/updated data for {len(df)} records")
 
     except Exception as e:
         print(f"Error uploading data to table {table_name}: {e}")
         conn.rollback()
         raise e
     finally:
-        cursor.close()
-        conn.close()
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
 
 
 def abstract_retrieval(scopus_credentials, doi):
