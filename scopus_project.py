@@ -7,6 +7,7 @@ import os
 import time
 import re
 import json
+import ast
 from datetime import timedelta, datetime
 from pandas import json_normalize
 from dotenv import load_dotenv
