@@ -9,7 +9,7 @@ import os
 STATE_FILENAME = "fetch_state_yearly.json"
 DEFAULT_HEADERS = {
     # !! IMPORTANT: Replace with your email !!
-    'User-Agent': 'PolyUAnalysisPortfolioProject/0.4 (mailto:bennisyiu@gmail.com)',
+    'User-Agent': 'PolyUAnalysisPortfolioProject/0.4 (mailto:bennis.yiu@connect.polyu.hk)',
     'Accept': 'application/json'
 }
 
@@ -59,190 +59,335 @@ def save_fetch_state(page_number, year):
 
 def process_and_append_data(results_list, csv_filename, last_page_processed_in_batch, year):
     """
-    Normalizes a list of OpenAlex results, extracts key fields, selects a
-    comprehensive set of columns, appends the batch to a CSV file,
+    Normalizes a list of OpenAlex results from the API, extracts key fields
+    comprehensively, selects the desired columns, appends the batch to a CSV file,
     updates the state file, and returns the processed DataFrame batch.
+    (This version mirrors the logic from normalize_local_json)
 
     Args:
-        results_list (list): A list of dictionaries, where each dict is an OpenAlex work record.
+        results_list (list): A list of dictionaries (OpenAlex work records).
         csv_filename (str): Path to the CSV file to append to.
-        last_page_processed_in_batch (int): The page number of the last page included in this batch.
-        year (int): The publication year this batch belongs to (for state saving).
+        last_page_processed_in_batch (int): The page number of the last page in this batch.
+        year (int): The publication year this batch belongs to.
 
     Returns:
-        pandas.DataFrame: The processed DataFrame for this batch, or an empty DataFrame if errors occur
-                          during critical processing steps or if the input list is empty.
+        pandas.DataFrame: Processed DataFrame for this batch, or empty if errors.
     """
     if not results_list:
         print("Warning: process_and_append_data received an empty results list.")
-        return pd.DataFrame()  # Return empty DataFrame if nothing to process
+        return pd.DataFrame()
 
     print(
         f"\nProcessing {len(results_list)} results (up to page {last_page_processed_in_batch} for year {year})...")
-    df_batch = pd.DataFrame()  # Initialize empty df for this batch
+    df_batch = pd.DataFrame()  # Initialize final DataFrame for this batch
 
     try:
         # --- 1. Initial Normalization ---
-        # Flatten the main structure; handles simple fields and nests simple dicts
         df_normalized = pd.json_normalize(results_list)
         print(
             f"Initial normalization resulted in {df_normalized.shape[1]} columns.")
 
         # --- 2. Custom Data Extraction & Simplification ---
-        # These steps process complex fields (like lists of dicts) left by json_normalize
-
-        # Extract author display names into a comma-separated string
-        if 'authorships' in df_normalized.columns:
+        # --- Authorships ---
+        if 'authorships' in df_normalized.columns and not df_normalized['authorships'].isnull().all():
             try:
                 df_normalized['author_names'] = df_normalized['authorships'].apply(
-                    lambda authors: ', '.join(sorted(list(set(  # Get unique, sorted names
+                    lambda authors: '; '.join(sorted(list(set(
                         auth.get('author', {}).get('display_name', '')
-                        # Check display_name exists
                         for auth in authors if isinstance(auth, dict) and auth.get('author', {}).get('display_name')
                     )))) if isinstance(authors, list) else None
-                ).fillna('')  # Replace None/NaN with empty string
+                ).fillna('')
             except Exception as e:
-                print(f"Warning: Error extracting author names: {e}")
-                # Ensure column exists even on error
+                print(f"Warn: Author names error: {e}")
                 df_normalized['author_names'] = ''
-        else:
-            # Create col if 'authorships' was missing
-            df_normalized['author_names'] = ''
-
-        # Extract institution display names from authorships
-        if 'authorships' in df_normalized.columns:
+            try:
+                df_normalized['author_orcids'] = df_normalized['authorships'].apply(
+                    lambda authors: '; '.join(sorted(list(set(
+                        auth.get('author', {}).get('orcid', '') or ''
+                        for auth in authors if isinstance(auth, dict) and auth.get('author') and auth.get('author').get('orcid')
+                    )))) if isinstance(authors, list) else None
+                ).fillna('')
+            except Exception as e:
+                print(f"Warn: Author ORCIDs error: {e}")
+                df_normalized['author_orcids'] = ''
             try:
                 df_normalized['institution_names_str'] = df_normalized['authorships'].apply(
-                    lambda authors: ', '.join(sorted(list(set(  # Get unique, sorted names
+                    lambda authors: '; '.join(sorted(list(set(
                         inst.get('display_name', '')
                         for auth in authors if isinstance(auth, dict) and isinstance(auth.get('institutions'), list)
-                        # Check display_name exists
                         for inst in auth['institutions'] if isinstance(inst, dict) and inst.get('display_name')
                     )))) if isinstance(authors, list) else None
                 ).fillna('')
             except Exception as e:
-                print(f"Warning: Error extracting institution names: {e}")
+                print(f"Warn: Institution names error: {e}")
                 df_normalized['institution_names_str'] = ''
+            try:
+                df_normalized['institution_countries'] = df_normalized['authorships'].apply(
+                    lambda authors: '; '.join(sorted(list(set(
+                        inst.get('country_code', '')
+                        for auth in authors if isinstance(auth, dict) and isinstance(auth.get('institutions'), list)
+                        for inst in auth['institutions'] if isinstance(inst, dict) and inst.get('country_code')
+                    )))) if isinstance(authors, list) else None
+                ).fillna('')
+            except Exception as e:
+                print(f"Warn: Institution countries error: {e}")
+                df_normalized['institution_countries'] = ''
+            try:
+                df_normalized['corresponding_author_ids'] = df_normalized['authorships'].apply(
+                    lambda authors: '; '.join(sorted(list(set(
+                        auth.get('author', {}).get('id', '')
+                        for auth in authors if isinstance(auth, dict) and auth.get('is_corresponding') and auth.get('author', {}).get('id')
+                    )))) if isinstance(authors, list) else None
+                ).fillna('')
+            except Exception as e:
+                print(f"Warn: Corresponding author IDs error: {e}")
+                df_normalized['corresponding_author_ids'] = ''
         else:
-            # Create col if 'authorships' was missing
+            df_normalized['author_names'] = ''
+            df_normalized['author_orcids'] = ''
             df_normalized['institution_names_str'] = ''
+            df_normalized['institution_countries'] = ''
+            df_normalized['corresponding_author_ids'] = ''
 
-        # Extract simplified OA status
+        # --- Primary Location / Source ---
+        if 'primary_location' in df_normalized.columns and not df_normalized['primary_location'].isnull().all():
+            if 'primary_location.source.display_name' in df_normalized.columns:
+                df_normalized['source_display_name'] = df_normalized['primary_location.source.display_name'].fillna(
+                    '')
+            else:
+                try:
+                    df_normalized['source_display_name'] = df_normalized['primary_location'].apply(lambda loc: loc.get(
+                        'source', {}).get('display_name', '') if isinstance(loc, dict) else '').fillna('')
+                except Exception as e:
+                    print(f"Warn: Source name (fallback) error: {e}")
+                    df_normalized['source_display_name'] = ''
+        else:
+            df_normalized['source_display_name'] = ''
+        if 'primary_location.source.id' not in df_normalized.columns:
+            df_normalized['primary_location.source.id'] = None
+        if 'primary_location.source.issn_l' not in df_normalized.columns:
+            df_normalized['primary_location.source.issn_l'] = None
+        if 'primary_location.landing_page_url' not in df_normalized.columns:
+            df_normalized['primary_location.landing_page_url'] = None
+        if 'primary_location.pdf_url' not in df_normalized.columns:
+            df_normalized['primary_location.pdf_url'] = None
+        if 'primary_location.version' not in df_normalized.columns:
+            df_normalized['primary_location.version'] = None
+        if 'primary_location.license' not in df_normalized.columns:
+            df_normalized['primary_location.license'] = None
+        if 'primary_location.is_oa' not in df_normalized.columns:
+            df_normalized['primary_location.is_oa'] = None
+
+        # --- Open Access ---
         if 'open_access.oa_status' in df_normalized.columns:
-            # Directly use the column if it exists after normalize, fill missing values
             df_normalized['oa_status'] = df_normalized['open_access.oa_status'].fillna(
                 'unknown')
         else:
-            # If the column wasn't created (e.g., open_access field missing in JSON), create it
             df_normalized['oa_status'] = 'unknown'
+        if 'open_access.oa_url' not in df_normalized.columns:
+            df_normalized['open_access.oa_url'] = None
 
-        # Extract primary source display name (Journal/Repo name)
-        if 'primary_location.source.display_name' in df_normalized.columns:
-            # Use the direct column, fill missing values
-            df_normalized['source_display_name'] = df_normalized['primary_location.source.display_name'].fillna(
-                '')
-        # Fallback if source was missing inside primary_location
-        elif 'primary_location' in df_normalized.columns:
+        # --- Topics ---
+        if 'topics' in df_normalized.columns and not df_normalized['topics'].isnull().all():
+            if 'primary_topic.display_name' in df_normalized.columns:
+                df_normalized['primary_topic_name'] = df_normalized['primary_topic.display_name'].fillna(
+                    '')
+            else:
+                df_normalized['primary_topic_name'] = ''
             try:
-                # Apply function to extract if source dict exists within primary_location dict
-                df_normalized['source_display_name'] = df_normalized['primary_location'].apply(
-                    lambda loc: loc.get('source', {}).get(
-                        'display_name', '') if isinstance(loc, dict) else ''
+                df_normalized['all_topic_names'] = df_normalized['topics'].apply(
+                    lambda topics: '; '.join(sorted(list(set(
+                        topic.get('display_name', '')
+                        for topic in topics if isinstance(topic, dict) and topic.get('display_name')
+                    )))) if isinstance(topics, list) else None
                 ).fillna('')
             except Exception as e:
-                print(
-                    f"Warning: Error extracting source display name via fallback: {e}")
-                df_normalized['source_display_name'] = ''
+                print(f"Warn: All topic names error: {e}")
+                df_normalized['all_topic_names'] = ''
         else:
-            # If primary_location itself was missing
-            df_normalized['source_display_name'] = ''
+            df_normalized['primary_topic_name'] = ''
+            df_normalized['all_topic_names'] = ''
+
+        # --- Concepts ---
+        if 'concepts' in df_normalized.columns and not df_normalized['concepts'].isnull().all():
+            try:
+                df_normalized['concept_names_level0'] = df_normalized['concepts'].apply(
+                    lambda concepts: '; '.join(sorted(list(set(
+                        concept.get('display_name', '')
+                        for concept in concepts if isinstance(concept, dict) and concept.get('level') == 0 and concept.get('display_name')
+                    )))) if isinstance(concepts, list) else None
+                ).fillna('')
+            except Exception as e:
+                print(f"Warn: Concepts (L0) error: {e}")
+                df_normalized['concept_names_level0'] = ''
+        else:
+            df_normalized['concept_names_level0'] = ''
+
+        # --- Keywords ---
+        if 'keywords' in df_normalized.columns and not df_normalized['keywords'].isnull().all():
+            try:
+                df_normalized['keywords_str'] = df_normalized['keywords'].apply(
+                    lambda keywords: '; '.join(sorted(list(set(
+                        kw.get('display_name', '')
+                        for kw in keywords if isinstance(kw, dict) and kw.get('display_name')
+                    )))) if isinstance(keywords, list) else None
+                ).fillna('')
+            except Exception as e:
+                print(f"Warn: Keywords error: {e}")
+                df_normalized['keywords_str'] = ''
+        else:
+            df_normalized['keywords_str'] = ''
+
+        # --- Grants ---
+        if 'grants' in df_normalized.columns and not df_normalized['grants'].isnull().all():
+            try:
+                df_normalized['funder_names'] = df_normalized['grants'].apply(
+                    lambda grants: '; '.join(sorted(list(set(
+                        g.get('funder_display_name', '')
+                        for g in grants if isinstance(g, dict) and g.get('funder_display_name')
+                    )))) if isinstance(grants, list) else None
+                ).fillna('')
+            except Exception as e:
+                print(f"Warn: Funder names error: {e}")
+                df_normalized['funder_names'] = ''
+            try:
+                df_normalized['award_ids'] = df_normalized['grants'].apply(
+                    lambda grants: '; '.join(sorted(list(set(
+                        g.get('award_id', '') or ''
+                        for g in grants if isinstance(g, dict) and g.get('award_id')
+                    )))) if isinstance(grants, list) else None
+                ).fillna('')
+            except Exception as e:
+                print(f"Warn: Award IDs error: {e}")
+                df_normalized['award_ids'] = ''
+        else:
+            df_normalized['funder_names'] = ''
+            df_normalized['award_ids'] = ''
+
+        # --- Sustainable Development Goals ---
+        if 'sustainable_development_goals' in df_normalized.columns and not df_normalized['sustainable_development_goals'].isnull().all():
+            try:
+                df_normalized['sdg_names'] = df_normalized['sustainable_development_goals'].apply(
+                    lambda sdgs: '; '.join(sorted(list(set(
+                        sdg.get('display_name', '')
+                        for sdg in sdgs if isinstance(sdg, dict) and sdg.get('display_name')
+                    )))) if isinstance(sdgs, list) else None
+                ).fillna('')
+            except Exception as e:
+                print(f"Warn: SDG names error: {e}")
+                df_normalized['sdg_names'] = ''
+        else:
+            df_normalized['sdg_names'] = ''
+
+        # --- Counts by Year (Cited By) ---
+        if 'counts_by_year' in df_normalized.columns and not df_normalized['counts_by_year'].isnull().all():
+            try:
+                df_normalized['counts_by_year_str'] = df_normalized['counts_by_year'].apply(
+                    lambda x: json.dumps(x) if isinstance(x, list) else str(x)
+                ).fillna('')
+            except Exception as e:
+                print(f"Warn: Counts by year error: {e}")
+                df_normalized['counts_by_year_str'] = ''
+        else:
+            df_normalized['counts_by_year_str'] = ''
+
+        # --- Ensure other potential direct columns exist ---
+        # (Copy the block of 'if col not in df_normalized.columns:' checks from normalize_local_json here)
+        if 'cited_by_count' not in df_normalized.columns:
+            df_normalized['cited_by_count'] = None
+        if 'fwci' not in df_normalized.columns:
+            df_normalized['fwci'] = None
+        if 'cited_by_percentile_year.min' not in df_normalized.columns:
+            df_normalized['cited_by_percentile_year.min'] = None
+        if 'cited_by_percentile_year.max' not in df_normalized.columns:
+            df_normalized['cited_by_percentile_year.max'] = None
+        if 'biblio.volume' not in df_normalized.columns:
+            df_normalized['biblio.volume'] = None
+        if 'biblio.issue' not in df_normalized.columns:
+            df_normalized['biblio.issue'] = None
+        if 'biblio.first_page' not in df_normalized.columns:
+            df_normalized['biblio.first_page'] = None
+        if 'biblio.last_page' not in df_normalized.columns:
+            df_normalized['biblio.last_page'] = None
+        if 'is_retracted' not in df_normalized.columns:
+            df_normalized['is_retracted'] = None
+        if 'is_paratext' not in df_normalized.columns:
+            df_normalized['is_paratext'] = None
+        if 'has_fulltext' not in df_normalized.columns:
+            df_normalized['has_fulltext'] = None
+        if 'ids.mag' not in df_normalized.columns:
+            df_normalized['ids.mag'] = None
+        if 'ids.pmid' not in df_normalized.columns:
+            df_normalized['ids.pmid'] = None
+        if 'ids.pmcid' not in df_normalized.columns:
+            df_normalized['ids.pmcid'] = None
+        if 'referenced_works_count' not in df_normalized.columns:
+            df_normalized['referenced_works_count'] = None
+        if 'updated_date' not in df_normalized.columns:
+            df_normalized['updated_date'] = None
+        if 'created_date' not in df_normalized.columns:
+            df_normalized['created_date'] = None
+        if 'cited_by_api_url' not in df_normalized.columns:
+            df_normalized['cited_by_api_url'] = None
+        # Also ensure top-level is_oa exists if you want it (might not be in API response)
+        if 'is_oa' not in df_normalized.columns:
+            df_normalized['is_oa'] = None
 
         # --- 3. Select Columns ---
-        # Define the comprehensive list of columns you want in your final CSV
+        # Use the SAME comprehensive list as in normalize_local_json
         core_columns = [
-            # --- Basic Info ---
-            'id',
-            'doi',
-            'title',
-            'display_name',  # Often identical to title, uncomment if needed
-            'publication_year',
-            'publication_date',
-            'language',
-            'type',  # e.g., 'article', 'book-chapter'
-            'type_crossref',  # More specific type from Crossref
-
-            # --- Citation & Impact ---
-            'cited_by_count',
-
-            # --- Access Info ---
-            'is_oa',  # Top-level Open Access flag (boolean)
-            # Simplified OA status ('gold', 'green', 'hybrid', 'bronze', 'closed', 'unknown') - Extracted above
-            'oa_status',
-            'open_access.oa_url',  # Link to an OA version, if available
-
-            # --- Primary Location (Journal/Repository Info) ---
-            'primary_location.is_oa',  # Is the version at this specific location OA?
-            'primary_location.landing_page_url',  # Link to article page
-            'primary_location.pdf_url',  # Direct PDF link, if available
-            'primary_location.version',  # e.g., 'publishedVersion', 'acceptedVersion'
-            'primary_location.license',  # License string (e.g., 'cc-by')
-            # OpenAlex ID of the source (journal, repo)
-            'primary_location.source.id',
-            'source_display_name',  # Cleaned source name - Extracted above
-
-            # --- Bibliographic Info ---
-            'biblio.volume',
-            'biblio.issue',
-            'biblio.first_page',
-            'biblio.last_page',
-
-            # --- Authorship Info ---
-            'author_names',  # Comma-separated author names - Extracted above
-            'institution_names_str',  # Comma-separated institution names - Extracted above
-
-            # --- Other Flags/Metadata ---
-            'is_retracted',
-            'is_paratext',
-            # This remains complex (list of dicts), uncomment if needed, or add specific concept extraction logic
-            'concepts'
-            # This remains complex (list of dicts), uncomment if needed
-            'grants'
-
-            # --- Other IDs ---
-            # 'ids.openalex', # Redundant with top-level 'id'
-            # 'ids.doi',      # Redundant with top-level 'doi'
-            'ids.mag',      # MAG ID, if present
-            'ids.pmid',     # PubMed ID, if present
-            'ids.pmcid',    # PubMed Central ID, if present
+            # Basic Info
+            'id', 'doi', 'title', 'publication_year', 'publication_date', 'language', 'type', 'type_crossref',
+            # Authorship (extracted)
+            'author_names', 'author_orcids', 'institution_names_str', 'institution_countries', 'corresponding_author_ids',
+            # Source/Location (extracted/direct)
+            'source_display_name', 'primary_location.source.id', 'primary_location.source.issn_l', 'primary_location.landing_page_url', 'primary_location.pdf_url', 'primary_location.version',
+            # Open Access (extracted/direct)
+            'is_oa', 'oa_status', 'open_access.oa_url', 'primary_location.is_oa', 'primary_location.license',
+            # Citation/Impact
+            'cited_by_count', 'fwci', 'cited_by_percentile_year.min', 'cited_by_percentile_year.max',
+            # Bibliographic Info
+            'biblio.volume', 'biblio.issue', 'biblio.first_page', 'biblio.last_page',
+            # Topics/Concepts/Keywords (extracted)
+            'primary_topic_name', 'all_topic_names', 'concept_names_level0', 'keywords_str',
+            # Funding (extracted)
+            'funder_names', 'award_ids',
+            # SDGs (extracted)
+            'sdg_names',
+            # Other Flags/Info
+            'is_retracted', 'is_paratext', 'has_fulltext',
+            # Other IDs
+            'ids.mag', 'ids.pmid', 'ids.pmcid',
+            # Counts
+            'counts_by_year_str', 'referenced_works_count',
+            # Dates
+            'updated_date', 'created_date',
+            # URLs for further queries
+            'cited_by_api_url',
         ]
 
-        # Ensure we only try to select columns that actually exist in the DataFrame
-        # Handles cases where some fields might be missing in some API responses
+        # Filter to existing columns
         existing_cols = [
             col for col in core_columns if col in df_normalized.columns]
-
-        # Create the final DataFrame batch with only the selected columns
-        # Use .copy() to avoid SettingWithCopyWarning
+        # Create the final batch
         df_batch = df_normalized[existing_cols].copy()
 
         print("Batch normalization, custom extraction, and column selection complete.")
         print("Batch DataFrame shape:", df_batch.shape)
-        # Print the columns that will actually be saved for verification:
-        print("Batch Columns to be saved:", df_batch.columns.tolist())
+        print("Batch Columns to be saved:",
+              df_batch.columns.tolist())  # Debug print
 
     except Exception as e:
         print(
             f"CRITICAL ERROR during batch normalization/processing for year {year}: {e}")
-        # If normalization fails badly, return empty DF; state/CSV won't be updated
+        print(traceback.format_exc())  # Print detailed traceback
+        # Return empty DataFrame on critical processing error for this batch
         return pd.DataFrame()
 
     # --- 4. Append to CSV ---
     try:
-        # Check if file exists and is not empty to determine if header should be written
         file_exists = os.path.exists(csv_filename)
-        # Write header only if file doesn't exist OR if it exists but is empty
         write_header = not file_exists or os.path.getsize(csv_filename) == 0
-
         print(
             f"Appending data batch to {csv_filename} (Header: {write_header})...")
         df_batch.to_csv(csv_filename, mode='a',
@@ -250,18 +395,15 @@ def process_and_append_data(results_list, csv_filename, last_page_processed_in_b
         print(f"Data batch successfully appended to {csv_filename}")
 
         # --- 5. Update State File ---
-        # CRITICAL: Only save state *after* successfully writing the corresponding data
-        # This ensures that if the script crashes between saving CSV and saving state,
-        # it will re-process this batch correctly on the next run.
+        # Only save state *after* successfully writing the corresponding data
         save_fetch_state(last_page_processed_in_batch, year)
-        # Optional print: print(f"Saved state: Successfully processed up to page {last_page_processed_in_batch} for year {year}.")
 
     except Exception as e:
         print(
             f"ERROR appending batch to CSV or saving state for year {year}: {e}")
+        print(traceback.format_exc())
         print("State file will NOT be updated for this batch to ensure reprocessing.")
-        # Even if saving fails, return the processed batch DF; maybe it can be used elsewhere
-        # Or consider returning pd.DataFrame() if you want to signal the save failure more strongly
+        # Return the processed batch DF even if saving fails, but state wasn't updated
         return df_batch
 
     # Return the processed DataFrame for this batch
@@ -269,7 +411,7 @@ def process_and_append_data(results_list, csv_filename, last_page_processed_in_b
 
 
 # --- Main function modified to loop through years ---
-def fetch_data_for_years(base_filter, years_to_fetch, csv_filename, pages_per_pause=10, pause_duration_min=5):
+def fetch_data_for_years(base_filter, years_to_fetch, csv_filename, pages_per_pause=4, pause_duration_min=1):
     """
     Fetches data for a list of years, appending to a single CSV and handling resumes per year.
     """
@@ -436,7 +578,7 @@ if __name__ == "__main__":
 
     # Define the list of years you want to fetch
     # Start with just one year again to test the smaller batch size
-    years = [2024]
+    years = [2022]
 
     output_csv = "polyu_publications_yearly_accumulated.csv"
 
