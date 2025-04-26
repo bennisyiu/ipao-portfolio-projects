@@ -1,0 +1,1198 @@
+{
+    "meta": {
+        "count": 1,
+        "db_response_time_ms": 71,
+        "page": 1,
+        "per_page": 25,
+        "groups_count": null
+    },
+    "results": [
+        {
+            "id": "https://openalex.org/I14243506",
+            "ror": "https://ror.org/0030zas98",
+            "display_name": "Hong Kong Polytechnic University",
+            "relevance_score": 191451.34,
+            "country_code": "HK",
+            "type": "funder",
+            "type_id": "https://openalex.org/institution-types/funder",
+            "lineage": [
+                "https://openalex.org/I14243506"
+            ],
+            "homepage_url": "http://www.polyu.edu.hk/web/en/home/index.html",
+            "image_url": "https://commons.wikimedia.org/w/index.php?title=Special:Redirect/file/Hkpolyu.jpg",
+            "image_thumbnail_url": "https://commons.wikimedia.org/w/index.php?title=Special:Redirect/file/Hkpolyu.jpg&width=300",
+            "display_name_acronyms": [
+                "HKPU"
+            ],
+            "display_name_alternatives": [
+                "香港理工大學",
+                "PolyU"
+            ],
+            "repositories": [
+                {
+                    "id": "https://openalex.org/S4306400205",
+                    "display_name": "PolyU Institutional Research Archive (Hong Kong Polytechnic University)",
+                    "host_organization": "https://openalex.org/I14243506",
+                    "host_organization_name": "Hong Kong Polytechnic University",
+                    "host_organization_lineage": [
+                        "https://openalex.org/I14243506"
+                    ]
+                }
+            ],
+            "works_count": 125982,
+            "cited_by_count": 3542601,
+            "summary_stats": {
+                "2yr_mean_citedness": 6.551685750636132,
+                "h_index": 473,
+                "i10_index": 57197
+            },
+            "ids": {
+                "openalex": "https://openalex.org/I14243506",
+                "ror": "https://ror.org/0030zas98",
+                "mag": "14243506",
+                "grid": "grid.16890.36",
+                "wikipedia": "https://en.wikipedia.org/wiki/Hong%20Kong%20Polytechnic%20University",
+                "wikidata": "https://www.wikidata.org/wiki/Q1187271"
+            },
+            "geo": {
+                "city": "Hong Kong",
+                "geonames_city_id": "1819729",
+                "region": null,
+                "country_code": "HK",
+                "country": "Hong Kong",
+                "latitude": 22.27832,
+                "longitude": 114.17469
+            },
+            "international": {
+                "display_name": {
+                    "ar": "جامعة هونغ كونغ المتعددة التقنية",
+                    "azb": "هونق کونق پولی‌تکنیک بیلیم‌یوردو",
+                    "ca": "Universitat Politècnica de Hong Kong",
+                    "cs": "Hongkongská polytechnická univerzita",
+                    "de": "Polytechnische Universität Hongkong",
+                    "en": "Hong Kong Polytechnic University",
+                    "eo": "Honkonga Politeknika Universitato",
+                    "es": "Universidad Politécnica de Hong Kong",
+                    "et": "Hongkongi Polütehniline Ülikool",
+                    "fa": "دانشگاه پلی‌تکنیک هنگ کنگ",
+                    "fr": "université polytechnique de Hong Kong",
+                    "ha": "Hong Kong Polytechnic University",
+                    "he": "האוניברסיטה הפוליטכנית של הונג קונג",
+                    "hu": "Hongkongi Műszaki Egyetem",
+                    "id": "Universitas Politeknik Hong Kong",
+                    "it": "Università politecnica di Hong Kong",
+                    "ja": "香港理工大学",
+                    "kk": "Гонконг Политехникалық университеті",
+                    "ko": "홍콩 폴리테크닉 대학교",
+                    "lzh": "香港理工大學",
+                    "min": "Universitas Politeknik Hong Kong",
+                    "mr": "हाँग काँग पॉलीटेक्निक विद्यापीठ",
+                    "nan": "Hiong-káng Lí-kang Tāi-ha̍k",
+                    "pt": "Universidade Politécnica de Hong Kong",
+                    "ru": "Гонконгский политехнический университет",
+                    "sl": "Politehniška univerza v Hongkongu",
+                    "sv": "Hongkongs polytekniska universitet",
+                    "tl": "Politeknikong Unibersidad ng Hong Kong",
+                    "uk": "Гонконзький політехнічний університет",
+                    "vi": "Đại học Bách khoa Hồng Kông",
+                    "yue": "香港理工大學",
+                    "zh": "香港理工大學",
+                    "zh-cn": "香港理工大学",
+                    "zh-hans": "香港理工大学",
+                    "zh-hant": "香港理工大學",
+                    "zh-hk": "香港理工大學",
+                    "zh-mo": "香港理工大學",
+                    "zh-my": "香港理工大学",
+                    "zh-sg": "香港理工大学",
+                    "zh-tw": "香港理工大學"
+                }
+            },
+            "associated_institutions": [],
+            "counts_by_year": [
+                {
+                    "year": 2025,
+                    "works_count": 1862,
+                    "cited_by_count": 128718
+                },
+                {
+                    "year": 2024,
+                    "works_count": 9121,
+                    "cited_by_count": 467732
+                },
+                {
+                    "year": 2023,
+                    "works_count": 10170,
+                    "cited_by_count": 431856
+                },
+                {
+                    "year": 2022,
+                    "works_count": 8707,
+                    "cited_by_count": 390524
+                },
+                {
+                    "year": 2021,
+                    "works_count": 7731,
+                    "cited_by_count": 350263
+                },
+                {
+                    "year": 2020,
+                    "works_count": 7352,
+                    "cited_by_count": 289456
+                },
+                {
+                    "year": 2019,
+                    "works_count": 6466,
+                    "cited_by_count": 224916
+                },
+                {
+                    "year": 2018,
+                    "works_count": 5802,
+                    "cited_by_count": 182574
+                },
+                {
+                    "year": 2017,
+                    "works_count": 5285,
+                    "cited_by_count": 152693
+                },
+                {
+                    "year": 2016,
+                    "works_count": 4732,
+                    "cited_by_count": 135640
+                },
+                {
+                    "year": 2015,
+                    "works_count": 4477,
+                    "cited_by_count": 126630
+                },
+                {
+                    "year": 2014,
+                    "works_count": 4130,
+                    "cited_by_count": 117436
+                },
+                {
+                    "year": 2013,
+                    "works_count": 4025,
+                    "cited_by_count": 101167
+                },
+                {
+                    "year": 2012,
+                    "works_count": 3868,
+                    "cited_by_count": 86314
+                }
+            ],
+            "roles": [
+                {
+                    "role": "funder",
+                    "id": "https://openalex.org/F4320322598",
+                    "works_count": 7086
+                },
+                {
+                    "role": "institution",
+                    "id": "https://openalex.org/I14243506",
+                    "works_count": 125982
+                }
+            ],
+            "topics": [
+                {
+                    "id": "https://openalex.org/T10055",
+                    "display_name": "Diverse Aspects of Tourism Research",
+                    "count": 1996,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/3312",
+                        "display_name": "Sociology and Political Science"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/33",
+                        "display_name": "Social Sciences"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/2",
+                        "display_name": "Social Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10534",
+                    "display_name": "Structural Health Monitoring Techniques",
+                    "count": 1792,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2205",
+                        "display_name": "Civil and Structural Engineering"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/22",
+                        "display_name": "Engineering"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10121",
+                    "display_name": "Building Energy and Comfort Optimization",
+                    "count": 1779,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2215",
+                        "display_name": "Building and Construction"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/22",
+                        "display_name": "Engineering"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10205",
+                    "display_name": "Advanced Fiber Optic Sensors",
+                    "count": 1743,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2208",
+                        "display_name": "Electrical and Electronic Engineering"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/22",
+                        "display_name": "Engineering"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10338",
+                    "display_name": "Advanced Sensor and Energy Harvesting Materials",
+                    "count": 1534,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2204",
+                        "display_name": "Biomedical Engineering"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/22",
+                        "display_name": "Engineering"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10609",
+                    "display_name": "Digital Marketing and Social Media",
+                    "count": 1522,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/3312",
+                        "display_name": "Sociology and Political Science"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/33",
+                        "display_name": "Social Sciences"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/2",
+                        "display_name": "Social Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10019",
+                    "display_name": "Corporate Finance and Governance",
+                    "count": 1503,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/1402",
+                        "display_name": "Accounting"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/14",
+                        "display_name": "Business, Management and Accounting"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/2",
+                        "display_name": "Social Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10299",
+                    "display_name": "Photonic and Optical Devices",
+                    "count": 1466,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2208",
+                        "display_name": "Electrical and Electronic Engineering"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/22",
+                        "display_name": "Engineering"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T11371",
+                    "display_name": "Wind and Air Flow Studies",
+                    "count": 1458,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2305",
+                        "display_name": "Environmental Engineering"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/23",
+                        "display_name": "Environmental Science"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10698",
+                    "display_name": "Transportation Planning and Optimization",
+                    "count": 1413,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/3313",
+                        "display_name": "Transportation"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/33",
+                        "display_name": "Social Sciences"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/2",
+                        "display_name": "Social Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10479",
+                    "display_name": "Structural Behavior of Reinforced Concrete",
+                    "count": 1398,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2215",
+                        "display_name": "Building and Construction"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/22",
+                        "display_name": "Engineering"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T11595",
+                    "display_name": "Textile materials and evaluations",
+                    "count": 1379,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2507",
+                        "display_name": "Polymers and Plastics"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/25",
+                        "display_name": "Materials Science"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10107",
+                    "display_name": "Ferroelectric and Piezoelectric Materials",
+                    "count": 1375,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2505",
+                        "display_name": "Materials Chemistry"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/25",
+                        "display_name": "Materials Science"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10395",
+                    "display_name": "Construction Project Management and Performance",
+                    "count": 1348,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/1803",
+                        "display_name": "Management Science and Operations Research"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/18",
+                        "display_name": "Decision Sciences"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/2",
+                        "display_name": "Social Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10660",
+                    "display_name": "Conducting polymers and applications",
+                    "count": 1329,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2507",
+                        "display_name": "Polymers and Plastics"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/25",
+                        "display_name": "Materials Science"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10154",
+                    "display_name": "Customer Service Quality and Loyalty",
+                    "count": 1273,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/1407",
+                        "display_name": "Organizational Behavior and Human Resource Management"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/14",
+                        "display_name": "Business, Management and Accounting"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/2",
+                        "display_name": "Social Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10713",
+                    "display_name": "Structural Load-Bearing Analysis",
+                    "count": 1229,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2205",
+                        "display_name": "Civil and Structural Engineering"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/22",
+                        "display_name": "Engineering"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10190",
+                    "display_name": "Air Quality and Health Impacts",
+                    "count": 1165,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2307",
+                        "display_name": "Health, Toxicology and Mutagenesis"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/23",
+                        "display_name": "Environmental Science"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10247",
+                    "display_name": "Perovskite Materials and Applications",
+                    "count": 1133,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2208",
+                        "display_name": "Electrical and Electronic Engineering"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/22",
+                        "display_name": "Engineering"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10078",
+                    "display_name": "Advanced Photocatalysis Techniques",
+                    "count": 1133,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2105",
+                        "display_name": "Renewable Energy, Sustainability and the Environment"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/21",
+                        "display_name": "Energy"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T11606",
+                    "display_name": "Infrastructure Maintenance and Monitoring",
+                    "count": 1117,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2205",
+                        "display_name": "Civil and Structural Engineering"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/22",
+                        "display_name": "Engineering"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10075",
+                    "display_name": "Atmospheric chemistry and aerosols",
+                    "count": 1099,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/1902",
+                        "display_name": "Atmospheric Science"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/19",
+                        "display_name": "Earth and Planetary Sciences"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10539",
+                    "display_name": "Sustainable Supply Chain Management",
+                    "count": 1089,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/1408",
+                        "display_name": "Strategy and Management"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/14",
+                        "display_name": "Business, Management and Accounting"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/2",
+                        "display_name": "Social Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10988",
+                    "display_name": "Advanced Fiber Laser Technologies",
+                    "count": 1088,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/3107",
+                        "display_name": "Atomic and Molecular Physics, and Optics"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/31",
+                        "display_name": "Physics and Astronomy"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T11006",
+                    "display_name": "BIM and Construction Integration",
+                    "count": 1084,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2215",
+                        "display_name": "Building and Construction"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/22",
+                        "display_name": "Engineering"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                }
+            ],
+            "topic_share": [
+                {
+                    "id": "https://openalex.org/T12584",
+                    "display_name": "Hospitality and Tourism Education",
+                    "value": 0.0128498,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/1409",
+                        "display_name": "Tourism, Leisure and Hospitality Management"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/14",
+                        "display_name": "Business, Management and Accounting"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/2",
+                        "display_name": "Social Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T12256",
+                    "display_name": "Facilities and Workplace Management",
+                    "value": 0.012187,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/3207",
+                        "display_name": "Social Psychology"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/32",
+                        "display_name": "Psychology"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/2",
+                        "display_name": "Social Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T14058",
+                    "display_name": "Value Engineering and Management",
+                    "value": 0.0108616,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/1408",
+                        "display_name": "Strategy and Management"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/14",
+                        "display_name": "Business, Management and Accounting"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/2",
+                        "display_name": "Social Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T11988",
+                    "display_name": "Sustainable Building Design and Assessment",
+                    "value": 0.0104467,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2215",
+                        "display_name": "Building and Construction"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/22",
+                        "display_name": "Engineering"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T12303",
+                    "display_name": "Tensor decomposition and applications",
+                    "value": 0.0100518,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2605",
+                        "display_name": "Computational Mathematics"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/26",
+                        "display_name": "Mathematics"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10328",
+                    "display_name": "Supply Chain and Inventory Management",
+                    "value": 0.0099889,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/1404",
+                        "display_name": "Management Information Systems"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/14",
+                        "display_name": "Business, Management and Accounting"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/2",
+                        "display_name": "Social Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10395",
+                    "display_name": "Construction Project Management and Performance",
+                    "value": 0.0089437,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/1803",
+                        "display_name": "Management Science and Operations Research"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/18",
+                        "display_name": "Decision Sciences"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/2",
+                        "display_name": "Social Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10055",
+                    "display_name": "Diverse Aspects of Tourism Research",
+                    "value": 0.0085737,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/3312",
+                        "display_name": "Sociology and Political Science"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/33",
+                        "display_name": "Social Sciences"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/2",
+                        "display_name": "Social Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T11317",
+                    "display_name": "Fire dynamics and safety research",
+                    "value": 0.0083982,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2213",
+                        "display_name": "Safety, Risk, Reliability and Quality"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/22",
+                        "display_name": "Engineering"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10846",
+                    "display_name": "Photonic Crystal and Fiber Optics",
+                    "value": 0.0082546,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2208",
+                        "display_name": "Electrical and Electronic Engineering"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/22",
+                        "display_name": "Engineering"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10121",
+                    "display_name": "Building Energy and Comfort Optimization",
+                    "value": 0.0080781,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2215",
+                        "display_name": "Building and Construction"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/22",
+                        "display_name": "Engineering"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10690",
+                    "display_name": "Vibration Control and Rheological Fluids",
+                    "value": 0.007721,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2205",
+                        "display_name": "Civil and Structural Engineering"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/22",
+                        "display_name": "Engineering"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10828",
+                    "display_name": "Biometric Identification and Security",
+                    "value": 0.0076045,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/1711",
+                        "display_name": "Signal Processing"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/17",
+                        "display_name": "Computer Science"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T11847",
+                    "display_name": "Recycled Aggregate Concrete Performance",
+                    "value": 0.0076036,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2215",
+                        "display_name": "Building and Construction"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/22",
+                        "display_name": "Engineering"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10107",
+                    "display_name": "Ferroelectric and Piezoelectric Materials",
+                    "value": 0.0073508,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2505",
+                        "display_name": "Materials Chemistry"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/25",
+                        "display_name": "Materials Science"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T11595",
+                    "display_name": "Textile materials and evaluations",
+                    "value": 0.0071789,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2507",
+                        "display_name": "Polymers and Plastics"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/25",
+                        "display_name": "Materials Science"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10539",
+                    "display_name": "Sustainable Supply Chain Management",
+                    "value": 0.0070118,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/1408",
+                        "display_name": "Strategy and Management"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/14",
+                        "display_name": "Business, Management and Accounting"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/2",
+                        "display_name": "Social Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T11500",
+                    "display_name": "Evacuation and Crowd Dynamics",
+                    "value": 0.0069926,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2212",
+                        "display_name": "Ocean Engineering"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/22",
+                        "display_name": "Engineering"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T11774",
+                    "display_name": "Adsorption and Cooling Systems",
+                    "value": 0.0069804,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2210",
+                        "display_name": "Mechanical Engineering"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/22",
+                        "display_name": "Engineering"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10205",
+                    "display_name": "Advanced Fiber Optic Sensors",
+                    "value": 0.0069074,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2208",
+                        "display_name": "Electrical and Electronic Engineering"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/22",
+                        "display_name": "Engineering"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T10766",
+                    "display_name": "Urban Heat Island Mitigation",
+                    "value": 0.0068033,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2305",
+                        "display_name": "Environmental Engineering"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/23",
+                        "display_name": "Environmental Science"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T12102",
+                    "display_name": "Fire effects on concrete materials",
+                    "value": 0.0067039,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2205",
+                        "display_name": "Civil and Structural Engineering"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/22",
+                        "display_name": "Engineering"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T11608",
+                    "display_name": "Dielectric materials and actuators",
+                    "value": 0.0066929,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2204",
+                        "display_name": "Biomedical Engineering"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/22",
+                        "display_name": "Engineering"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T13249",
+                    "display_name": "Dielectric properties of ceramics",
+                    "value": 0.0066867,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2505",
+                        "display_name": "Materials Chemistry"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/25",
+                        "display_name": "Materials Science"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                },
+                {
+                    "id": "https://openalex.org/T11371",
+                    "display_name": "Wind and Air Flow Studies",
+                    "value": 0.0064327,
+                    "subfield": {
+                        "id": "https://openalex.org/subfields/2305",
+                        "display_name": "Environmental Engineering"
+                    },
+                    "field": {
+                        "id": "https://openalex.org/fields/23",
+                        "display_name": "Environmental Science"
+                    },
+                    "domain": {
+                        "id": "https://openalex.org/domains/3",
+                        "display_name": "Physical Sciences"
+                    }
+                }
+            ],
+            "x_concepts": [
+                {
+                    "id": "https://openalex.org/C41008148",
+                    "wikidata": "https://www.wikidata.org/wiki/Q21198",
+                    "display_name": "Computer science",
+                    "level": 0,
+                    "score": 60.7
+                },
+                {
+                    "id": "https://openalex.org/C127413603",
+                    "wikidata": "https://www.wikidata.org/wiki/Q11023",
+                    "display_name": "Engineering",
+                    "level": 0,
+                    "score": 58.3
+                },
+                {
+                    "id": "https://openalex.org/C121332964",
+                    "wikidata": "https://www.wikidata.org/wiki/Q413",
+                    "display_name": "Physics",
+                    "level": 0,
+                    "score": 56.3
+                },
+                {
+                    "id": "https://openalex.org/C86803240",
+                    "wikidata": "https://www.wikidata.org/wiki/Q420",
+                    "display_name": "Biology",
+                    "level": 0,
+                    "score": 46
+                },
+                {
+                    "id": "https://openalex.org/C33923547",
+                    "wikidata": "https://www.wikidata.org/wiki/Q395",
+                    "display_name": "Mathematics",
+                    "level": 0,
+                    "score": 44.4
+                },
+                {
+                    "id": "https://openalex.org/C62520636",
+                    "wikidata": "https://www.wikidata.org/wiki/Q944",
+                    "display_name": "Quantum mechanics",
+                    "level": 1,
+                    "score": 39.3
+                },
+                {
+                    "id": "https://openalex.org/C185592680",
+                    "wikidata": "https://www.wikidata.org/wiki/Q2329",
+                    "display_name": "Chemistry",
+                    "level": 0,
+                    "score": 33.9
+                },
+                {
+                    "id": "https://openalex.org/C192562407",
+                    "wikidata": "https://www.wikidata.org/wiki/Q228736",
+                    "display_name": "Materials science",
+                    "level": 0,
+                    "score": 32
+                },
+                {
+                    "id": "https://openalex.org/C162324750",
+                    "wikidata": "https://www.wikidata.org/wiki/Q8134",
+                    "display_name": "Economics",
+                    "level": 0,
+                    "score": 29.9
+                },
+                {
+                    "id": "https://openalex.org/C71924100",
+                    "wikidata": "https://www.wikidata.org/wiki/Q11190",
+                    "display_name": "Medicine",
+                    "level": 0,
+                    "score": 28.2
+                },
+                {
+                    "id": "https://openalex.org/C205649164",
+                    "wikidata": "https://www.wikidata.org/wiki/Q1071",
+                    "display_name": "Geography",
+                    "level": 0,
+                    "score": 28.2
+                },
+                {
+                    "id": "https://openalex.org/C154945302",
+                    "wikidata": "https://www.wikidata.org/wiki/Q11660",
+                    "display_name": "Artificial intelligence",
+                    "level": 1,
+                    "score": 26.7
+                },
+                {
+                    "id": "https://openalex.org/C15744967",
+                    "wikidata": "https://www.wikidata.org/wiki/Q9418",
+                    "display_name": "Psychology",
+                    "level": 0,
+                    "score": 26.5
+                },
+                {
+                    "id": "https://openalex.org/C97355855",
+                    "wikidata": "https://www.wikidata.org/wiki/Q11473",
+                    "display_name": "Thermodynamics",
+                    "level": 1,
+                    "score": 25.4
+                },
+                {
+                    "id": "https://openalex.org/C17744445",
+                    "wikidata": "https://www.wikidata.org/wiki/Q36442",
+                    "display_name": "Political science",
+                    "level": 0,
+                    "score": 24.5
+                },
+                {
+                    "id": "https://openalex.org/C199539241",
+                    "wikidata": "https://www.wikidata.org/wiki/Q7748",
+                    "display_name": "Law",
+                    "level": 1,
+                    "score": 23.8
+                },
+                {
+                    "id": "https://openalex.org/C159985019",
+                    "wikidata": "https://www.wikidata.org/wiki/Q181790",
+                    "display_name": "Composite material",
+                    "level": 1,
+                    "score": 23.1
+                },
+                {
+                    "id": "https://openalex.org/C178790620",
+                    "wikidata": "https://www.wikidata.org/wiki/Q11351",
+                    "display_name": "Organic chemistry",
+                    "level": 1,
+                    "score": 23.1
+                },
+                {
+                    "id": "https://openalex.org/C138885662",
+                    "wikidata": "https://www.wikidata.org/wiki/Q5891",
+                    "display_name": "Philosophy",
+                    "level": 0,
+                    "score": 22.3
+                },
+                {
+                    "id": "https://openalex.org/C127313418",
+                    "wikidata": "https://www.wikidata.org/wiki/Q1069",
+                    "display_name": "Geology",
+                    "level": 0,
+                    "score": 21.7
+                }
+            ],
+            "is_super_system": false,
+            "works_api_url": "https://api.openalex.org/works?filter=institutions.id:I14243506",
+            "updated_date": "2025-04-22T01:52:57.486918",
+            "created_date": "2016-06-24"
+        }
+    ],
+    "group_by": []
+}
