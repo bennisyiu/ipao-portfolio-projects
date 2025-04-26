@@ -503,7 +503,8 @@ def scopus_research_procedures(publication_year, document_types):
 
                     # --- Save updated data to the year-specific CSV ---
                     try:
-                        combined_df.to_csv(csv_file, index=False)
+                        combined_df.to_csv(
+                            csv_file, index=False, encoding='utf-8-sig')
                         print(
                             f"\nResults saved to '{csv_file}'. Total records for {publication_year}: {len(combined_df)}")
                     except Exception as e:
@@ -722,7 +723,8 @@ def abstract_retrieval_procedures():
 
         # Save abstract results to CSV
         abstract_csv_file = 'scopus_abstract_output.csv'
-        abstract_df.to_csv(abstract_csv_file, index=False)
+        abstract_df.to_csv(abstract_csv_file, index=False,
+                           encoding='utf-8-sig')
         print(f"\nAbstract results saved to '{abstract_csv_file}'")
 
         # Upload abstract results to database
