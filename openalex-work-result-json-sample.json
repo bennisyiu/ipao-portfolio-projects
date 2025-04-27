@@ -1,0 +1,191 @@
+// 1st result starts here 
+{
+    "id": "https://openalex.org/W1775749144",
+    "doi": "https://doi.org/10.1016/s0021-9258(19)52451-6",
+    "title": "PROTEIN MEASUREMENT WITH THE FOLIN PHENOL REAGENT",
+    "display_name": "PROTEIN MEASUREMENT WITH THE FOLIN PHENOL REAGENT",
+    "publication_year": 1951,
+    "publication_date": "1951-11-01",
+    "language": "en",
+    "primary_location": {
+        "is_oa": true,
+        "landing_page_url": "https://doi.org/10.1016/s0021-9258(19)52451-6",
+        "source": {
+            "id": "https://openalex.org/S140251998",
+            "display_name": "Journal of Biological Chemistry",
+            "issn_l": "0021-9258",
+            "is_oa": true,
+            "is_indexed_in_scopus": true,
+            "host_organization_name": "Elsevier BV",
+            "host_organization_lineage_names": [
+                "Elsevier BV"
+            ],
+            "type": "journal"
+        }
+    },
+    "type": "article",
+    "authorships": [
+        {
+            "author_position": "first",
+            "author": {
+                "display_name": "OliverH. Lowry",
+                "orcid": null
+            },
+            "institutions": [
+                {
+                    "display_name": "Washington University in St. Louis",
+                    "ror": "https://ror.org/01yc7t268",
+                    "country_code": "US",
+                    "type": "funder"
+                }
+            ],
+            "countries": [
+                "US"
+            ]
+        },
+        {
+            "author_position": "middle",
+            "author": {
+                "display_name": "NiraJ. Rosebrough",
+                "orcid": null
+            },
+            "institutions": [
+                {
+                    "display_name": "Washington University in St. Louis",
+                    "ror": "https://ror.org/01yc7t268",
+                    "country_code": "US"
+                }
+            ],
+            "countries": [
+                "US"
+            ]
+        },
+        {
+            "author_position": "middle",
+            "author": {
+                "display_name": "A. Farr",
+                "orcid": null
+            },
+            "institutions": [
+                {
+                    "display_name": "Washington University in St. Louis",
+                    "ror": "https://ror.org/01yc7t268",
+                    "country_code": "US"
+                }
+            ],
+            "countries": [
+                "US"
+            ]
+        },
+        {
+            "author_position": "last",
+            "author": {
+                "display_name": "RoseJ. Randall",
+                "orcid": null
+            },
+            "institutions": [
+                {
+                    "display_name": "Washington University in St. Louis",
+                    "ror": "https://ror.org/01yc7t268",
+                    "country_code": "US"
+                }
+            ],
+            "countries": [
+                "US"
+            ]
+        }
+    ],
+    "fwci": 39.503,
+    "cited_by_count": 320186,
+    "citation_normalized_percentile": {
+        "value": 0.99962,
+        "is_in_top_1_percent": true,
+        "is_in_top_10_percent": true
+    },
+    "cited_by_percentile_year": {
+        "min": 99,
+        "max": 100
+    },
+    "biblio": {
+        "volume": "193",
+        "issue": "1",
+        "first_page": "265",
+        "last_page": "275"
+    },
+    "is_retracted": false,
+    "primary_topic": {
+        "display_name": "Glycosylation and Glycoproteins Research",
+        "score": 0.9678,
+        "subfield": {
+            "display_name": "Molecular Biology"
+        },
+        "field": {
+            "display_name": "Biochemistry, Genetics and Molecular Biology"
+        },
+        "domain": {
+            "display_name": "Life Sciences"
+        }
+    },
+    "grants": [],
+    "counts_by_year": [
+        {
+            "year": 2025,
+            "cited_by_count": 556
+        },
+        {
+            "year": 2024,
+            "cited_by_count": 2894
+        },
+        {
+            "year": 2023,
+            "cited_by_count": 3292
+        },
+        {
+            "year": 2022,
+            "cited_by_count": 3518
+        },
+        {
+            "year": 2021,
+            "cited_by_count": 3697
+        },
+        {
+            "year": 2020,
+            "cited_by_count": 3751
+        },
+        {
+            "year": 2019,
+            "cited_by_count": 3513
+        },
+        {
+            "year": 2018,
+            "cited_by_count": 3466
+        },
+        {
+            "year": 2017,
+            "cited_by_count": 3642
+        },
+        {
+            "year": 2016,
+            "cited_by_count": 3934
+        },
+        {
+            "year": 2015,
+            "cited_by_count": 4522
+        },
+        {
+            "year": 2014,
+            "cited_by_count": 5022
+        },
+        {
+            "year": 2013,
+            "cited_by_count": 4941
+        },
+        {
+            "year": 2012,
+            "cited_by_count": 4963
+        }
+    ],
+    "updated_date": "2025-04-17T09:53:06.250631",
+    "created_date": "2016-06-24"
+}
+// 1st result ends here 
