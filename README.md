@@ -25,7 +25,8 @@ The primary workflow is:
 
 ## 📁 Project Structure
 
-scopus\*openalex_projects/
+```
+scopus*openalex_projects/
 ├── extract_opealex.py
 ├── extract_scopus_search.py
 ├── transform_split_data.py
@@ -36,6 +37,7 @@ scopus\*openalex_projects/
 ├── scopus_checkpoint.json # (State file used by older versions - potentially removable)
 ├── scopus_search_metadata.json # (State file used by older versions - potentially removable)
 └── README.md
+```
 
 ## ⚙️ Setup
 
